@@ -1845,6 +1845,18 @@ class BuiltinVariable(VariableTracker):
 
         op = self.fn
 
+        if op in [operator.is_, operator.is_not]:
+            is_result = (
+                isinstance(left, SymNodeVariable)
+                and isinstance(right, SymNodeVariable)
+                and id(extract_fake_example_value(left.as_proxy().node))
+                == id(extract_fake_example_value(right.as_proxy().node))
+            )
+            if op is operator.is_:
+                return ConstantVariable.create(is_result)
+            else:
+                return ConstantVariable.create(not is_result)
+            
         if op not in supported_tensor_comparison_op_values:
             unimplemented(f"{op.__name__}({left}, {right})")
 
