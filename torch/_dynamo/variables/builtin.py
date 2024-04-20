@@ -1849,8 +1849,7 @@ class BuiltinVariable(VariableTracker):
             is_result = (
                 isinstance(left, SymNodeVariable)
                 and isinstance(right, SymNodeVariable)
-                and id(extract_fake_example_value(left.as_proxy().node))
-                == id(extract_fake_example_value(right.as_proxy().node))
+                and left.sym_num is right.sym_num
             )
             if op is operator.is_:
                 return ConstantVariable.create(is_result)
